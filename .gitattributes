@@ -1,0 +1,11 @@
+# El servidor es Linux y se desarrolla en Windows: todo texto va con LF.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.ico binary
+*.pdf binary
+
+# Los .bat van con CRLF: cmd con LF puede fallar en goto/call.
+*.bat text eol=crlf
