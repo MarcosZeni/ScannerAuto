@@ -4,6 +4,10 @@ App de diagnóstico OBD2 para el taller: se conecta directo a un adaptador ELM32
 
 Al adaptador solo salen consultas de lectura, salvo en los flujos que el mecánico confirma: **borrar fallas** (de motor, o de cualquier módulo encontrado en el barrido) y **pruebas de actuadores** (electro, bomba, inyectores…). Cada uno abre un alcance con la lista exacta de comandos que necesita y lo cierra al terminar (`CommandPolicy` + `CommandScope`); no hay consola libre.
 
+## En pausa (decisión del 20/10/2026)
+
+Para el uso del taller alcanza una app gratuita (Torque Pro, Car Scanner) con un dongle ELM327 de unos $10.000, que lee y borra fallas de motor igual que esta app. Lo único que esta app hace de más es el barrido de módulos (ABS, airbag, caja) y la infraestructura de pruebas de actuadores, que necesita perfiles por modelo. El proyecto no figura en la lista de tareas del taller; si se retoma, lo pendiente está en [docs/PENDIENTES.md](docs/PENDIENTES.md).
+
 ## Estado (versión 0.2, 20/10/2026)
 
 | Qué | Estado |
@@ -49,4 +53,4 @@ tests/TallerScan.Tests         xunit: vectores de decodificación, tramas, polí
 docs/                          decisiones, compatibilidad, entorno
 ```
 
-Plan completo y razones de cada límite: [../Docs/TallerScan_Plan_Desarrollo_Multiplataforma.md](../Docs/TallerScan_Plan_Desarrollo_Multiplataforma.md).
+Plan completo y razones de cada límite: [docs/PLAN.md](docs/PLAN.md).

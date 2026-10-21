@@ -1,6 +1,6 @@
 # Scanner — TallerScan
 
-App de diagnóstico OBD2. .NET 10 + MAUI (Android y Windows), sin servidor: el celular habla directo con el adaptador ELM327. Plan y razones: `../Docs/TallerScan_Plan_Desarrollo_Multiplataforma.md`. Estado y comandos: `README.md`. Decisiones: `docs/DECISIONES.md`.
+App de diagnóstico OBD2. .NET 10 + MAUI (Android y Windows), sin servidor: el celular habla directo con el adaptador ELM327. Plan y razones: `docs/PLAN.md`. Estado y comandos: `README.md`. Decisiones: `docs/DECISIONES.md`.
 
 ## Reglas
 - **Lectura por defecto; escritura solo por flujos confirmados.** Todo comando al adaptador pasa por `Core/Safety/CommandPolicy` justo antes del transporte. Lo que escribe (borrar fallas, pruebas de actuadores) abre un `CommandScope` con la lista exacta de comandos que necesita y lo cierra al terminar (`Elm327Backend.OpenScope`). Nada de modo 08, seguridad (`27`), programación ni consola libre. Agregar comandos a la lista base se consulta antes.

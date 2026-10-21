@@ -1,6 +1,6 @@
 # Decisiones (versión 0.1)
 
-Cambios respecto del plan (`Docs/TallerScan_Plan_Desarrollo_Multiplataforma.md`) y por qué.
+Cambios respecto del plan (`docs/PLAN.md`) y por qué.
 
 ## Backend ELM327 propio, sin Shiny.Obd
 
