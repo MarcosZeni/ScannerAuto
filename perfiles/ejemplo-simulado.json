@@ -1,0 +1,291 @@
+{
+  "Id": "ejemplo-simulado",
+  "Name": "Ejemplo (auto simulado)",
+  "Source": "Plantilla exportada del simulador: identificadores inventados, no sirven para un auto real.",
+  "Modules": [
+    {
+      "Name": "Motor",
+      "RequestId": "7E0",
+      "ResponseId": "7E8"
+    },
+    {
+      "Name": "Caja",
+      "RequestId": "7E1",
+      "ResponseId": "7E9"
+    }
+  ],
+  "Tests": [
+    {
+      "Id": "electro",
+      "Name": "Electroventilador",
+      "Description": "Fuerza el electro en baja o en alta. Mirá que gire y cómo baja la temperatura.",
+      "ModuleName": "Motor",
+      "Steps": [
+        {
+          "Name": "Baja",
+          "Payload": "2F40010301",
+          "IsStop": false
+        },
+        {
+          "Name": "Alta",
+          "Payload": "2F40010302",
+          "IsStop": false
+        },
+        {
+          "Name": "Apagar",
+          "Payload": "2F400100",
+          "IsStop": true
+        }
+      ],
+      "Precondition": "EngineOff",
+      "MaxDuration": "00:00:30",
+      "FeedbackPid": 5,
+      "StatusDid": "4001"
+    },
+    {
+      "Id": "bomba",
+      "Name": "Bomba de combustible",
+      "Description": "Activa el relé de la bomba: se tiene que escuchar el zumbido en el tanque.",
+      "ModuleName": "Motor",
+      "Steps": [
+        {
+          "Name": "Activar",
+          "Payload": "2F40020301",
+          "IsStop": false
+        },
+        {
+          "Name": "Apagar",
+          "Payload": "2F400200",
+          "IsStop": true
+        }
+      ],
+      "Precondition": "EngineOff",
+      "MaxDuration": "00:00:20",
+      "StatusDid": "4002"
+    },
+    {
+      "Id": "aa",
+      "Name": "Compresor de A/A",
+      "Description": "Acopla el embrague del compresor.",
+      "ModuleName": "Motor",
+      "Steps": [
+        {
+          "Name": "Activar",
+          "Payload": "2F40030301",
+          "IsStop": false
+        },
+        {
+          "Name": "Apagar",
+          "Payload": "2F400300",
+          "IsStop": true
+        }
+      ],
+      "Precondition": "EngineOff",
+      "MaxDuration": "00:00:20",
+      "StatusDid": "4003"
+    },
+    {
+      "Id": "purga",
+      "Name": "Válvula de purga (EVAP)",
+      "Description": "Abre la válvula de purga del cánister al porcentaje elegido.",
+      "ModuleName": "Motor",
+      "Steps": [
+        {
+          "Name": "50 %",
+          "Payload": "2F40040332",
+          "IsStop": false
+        },
+        {
+          "Name": "100 %",
+          "Payload": "2F40040364",
+          "IsStop": false
+        },
+        {
+          "Name": "Apagar",
+          "Payload": "2F400400",
+          "IsStop": true
+        }
+      ],
+      "Precondition": "EngineOff",
+      "MaxDuration": "00:00:20",
+      "StatusDid": "4004"
+    },
+    {
+      "Id": "egr",
+      "Name": "Válvula EGR",
+      "Description": "Abre la EGR al porcentaje elegido.",
+      "ModuleName": "Motor",
+      "Steps": [
+        {
+          "Name": "30 %",
+          "Payload": "2F4005031E",
+          "IsStop": false
+        },
+        {
+          "Name": "70 %",
+          "Payload": "2F40050346",
+          "IsStop": false
+        },
+        {
+          "Name": "Apagar",
+          "Payload": "2F400500",
+          "IsStop": true
+        }
+      ],
+      "Precondition": "EngineOff",
+      "MaxDuration": "00:00:20",
+      "StatusDid": "4005"
+    },
+    {
+      "Id": "ralenti",
+      "Name": "Motor paso a paso del ralentí",
+      "Description": "Mueve el actuador de ralentí a una posición fija.",
+      "ModuleName": "Motor",
+      "Steps": [
+        {
+          "Name": "Cerrado",
+          "Payload": "2F40060300",
+          "IsStop": false
+        },
+        {
+          "Name": "Medio",
+          "Payload": "2F40060380",
+          "IsStop": false
+        },
+        {
+          "Name": "Abierto",
+          "Payload": "2F400603FF",
+          "IsStop": false
+        },
+        {
+          "Name": "Apagar",
+          "Payload": "2F400600",
+          "IsStop": true
+        }
+      ],
+      "Precondition": "EngineOff",
+      "MaxDuration": "00:00:20",
+      "StatusDid": "4006"
+    },
+    {
+      "Id": "mil",
+      "Name": "Luz de falla (tablero)",
+      "Description": "Enciende la luz de motor del tablero para verificar la lámpara.",
+      "ModuleName": "Motor",
+      "Steps": [
+        {
+          "Name": "Activar",
+          "Payload": "2F40070301",
+          "IsStop": false
+        },
+        {
+          "Name": "Apagar",
+          "Payload": "2F400700",
+          "IsStop": true
+        }
+      ],
+      "Precondition": "EngineOff",
+      "MaxDuration": "00:00:20",
+      "StatusDid": "4007"
+    },
+    {
+      "Id": "inyectores",
+      "Name": "Inyectores",
+      "Description": "Pulsa un inyector por vez: se escucha el clic. No insistir: moja la bujía.",
+      "ModuleName": "Motor",
+      "Steps": [
+        {
+          "Name": "Cil. 1",
+          "Payload": "2F40110301",
+          "IsStop": false
+        },
+        {
+          "Name": "Cil. 2",
+          "Payload": "2F40120301",
+          "IsStop": false
+        },
+        {
+          "Name": "Cil. 3",
+          "Payload": "2F40130301",
+          "IsStop": false
+        },
+        {
+          "Name": "Cil. 4",
+          "Payload": "2F40140301",
+          "IsStop": false
+        },
+        {
+          "Name": "Detener",
+          "Payload": "2F401100",
+          "IsStop": true
+        }
+      ],
+      "Precondition": "EngineOff",
+      "MaxDuration": "00:00:10"
+    },
+    {
+      "Id": "bobinas",
+      "Name": "Bobinas de encendido",
+      "Description": "Dispara una bobina por vez (chispa de prueba).",
+      "ModuleName": "Motor",
+      "Steps": [
+        {
+          "Name": "Cil. 1",
+          "Payload": "2F40210301",
+          "IsStop": false
+        },
+        {
+          "Name": "Cil. 2",
+          "Payload": "2F40220301",
+          "IsStop": false
+        },
+        {
+          "Name": "Cil. 3",
+          "Payload": "2F40230301",
+          "IsStop": false
+        },
+        {
+          "Name": "Cil. 4",
+          "Payload": "2F40240301",
+          "IsStop": false
+        },
+        {
+          "Name": "Detener",
+          "Payload": "2F402100",
+          "IsStop": true
+        }
+      ],
+      "Precondition": "EngineOff",
+      "MaxDuration": "00:00:10"
+    },
+    {
+      "Id": "tablero",
+      "Name": "Barrido del tablero",
+      "Description": "Rutina: las agujas del tablero van a tope y vuelven.",
+      "ModuleName": "Motor",
+      "Steps": [
+        {
+          "Name": "Iniciar",
+          "Payload": "31010201",
+          "IsStop": false
+        },
+        {
+          "Name": "Detener",
+          "Payload": "31020201",
+          "IsStop": true
+        }
+      ],
+      "Precondition": "EngineOff",
+      "MaxDuration": "00:00:15"
+    }
+  ],
+  "ModuleClears": [
+    {
+      "ModuleName": "Caja",
+      "Payload": "14FFFFFF"
+    }
+  ],
+  "SessionOpen": "1003",
+  "TesterPresent": "3E80",
+  "VinPrefixes": []
+}

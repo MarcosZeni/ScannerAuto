@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="TallerScan.App.Views.LivePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:TallerScan.App.ViewModels"
+    x:DataType="vm:LiveViewModel"
+    Title="Sensores">
+
+    <CollectionView ItemsSource="{Binding Sensors}" SelectionMode="None" Margin="16,0">
+        <CollectionView.ItemsLayout>
+            <LinearItemsLayout Orientation="Vertical" ItemSpacing="8" />
+        </CollectionView.ItemsLayout>
+
+        <CollectionView.Header>
+            <VerticalStackLayout Spacing="10" Padding="0,16,0,12">
+                <Border Style="{StaticResource Notice}" IsVisible="{Binding IsSimulated}">
+                    <Label Text="SIMULACIÓN: valores sintéticos." FontAttributes="Bold" TextColor="{StaticResource Warning}" />
+                </Border>
+                <Label Text="{Binding Status}" />
+                <FlexLayout Wrap="Wrap" JustifyContent="Start" AlignItems="Center">
+                    <Button Text="Iniciar" Style="{StaticResource PrimaryButton}" Command="{Binding StartCommand}" Margin="0,0,8,8" />
+                    <Button Text="Detener" Command="{Binding StopCommand}" Margin="0,0,8,8" />
+                    <Button Text="{Binding RecordText}" Style="{StaticResource OutlineButton}" Command="{Binding RecordCommand}" Margin="0,0,8,8" />
+                </FlexLayout>
+                <HorizontalStackLayout Spacing="8" IsVisible="{Binding IsLive, Converter={StaticResource Not}}">
+                    <Button Text="Marcar todos" Style="{StaticResource OutlineButton}" Command="{Binding SelectAllCommand}" />
+                    <Button Text="Ninguno" Style="{StaticResource OutlineButton}" Command="{Binding SelectNoneCommand}" />
+                </HorizontalStackLayout>
+                <Label Style="{StaticResource Muted}"
+                       Text="Los rápidos (RPM, mariposa…) se piden en cada vuelta; temperaturas y tensión cada 3 s. Gris = sin actualizar." />
+            </VerticalStackLayout>
+        </CollectionView.Header>
+
+        <CollectionView.ItemTemplate>
+            <DataTemplate x:DataType="vm:SensorItem">
+                <Border Style="{StaticResource Card}" Padding="10,8">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="{Binding Name}" Style="{StaticResource Muted}" />
+                        <HorizontalStackLayout Spacing="6">
+                            <CheckBox IsChecked="{Binding IsSelected}" VerticalOptions="Center" />
+                            <Label Text="{Binding ValueText}" Style="{StaticResource Big}" VerticalOptions="Center">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label" Binding="{Binding IsStale}" Value="True">
+                                        <Setter Property="Opacity" Value="0.45" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                        </HorizontalStackLayout>
+                        <Label Text="{Binding AgeText}" Style="{StaticResource Muted}" FontSize="12" />
+                    </VerticalStackLayout>
+                </Border>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+
+        <CollectionView.EmptyView>
+            <Label Text="Sin sensores todavía." Style="{StaticResource Muted}" Margin="0,16" />
+        </CollectionView.EmptyView>
+    </CollectionView>
+</ContentPage>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="TallerScan.App.Views.ActuatorsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:TallerScan.App.ViewModels"
+    x:DataType="vm:ActuatorsViewModel"
+    Title="Pruebas">
+
+    <CollectionView ItemsSource="{Binding Tests}" SelectionMode="None" Margin="16,0">
+        <CollectionView.ItemsLayout>
+            <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
+        </CollectionView.ItemsLayout>
+
+        <CollectionView.Header>
+            <VerticalStackLayout Spacing="12" Padding="0,16,0,12">
+                <Label Text="Conectá un auto en la pestaña Conexión." Style="{StaticResource Muted}" IsVisible="{Binding IsReady, Converter={StaticResource Not}}" />
+
+                <Border Style="{StaticResource Notice}" IsVisible="{Binding NoProfile}">
+                    <Label TextColor="{StaticResource Warning}"
+                           Text="Este vehículo no tiene perfil de pruebas. Activar actuadores (electro, bomba, inyectores) no es parte de OBD2 genérico: cada marca usa sus propios códigos y hace falta un perfil para este modelo. Las lecturas y el borrado de fallas de motor funcionan igual." />
+                </Border>
+
+                <VerticalStackLayout Spacing="8" IsVisible="{Binding CanChooseProfile}">
+                    <Label Text="Perfil del vehículo" Style="{StaticResource Section}" />
+                    <Picker Title="Perfil" ItemsSource="{Binding Profiles}" SelectedItem="{Binding SelectedProfile}" IsVisible="{Binding HasImportedProfiles}" />
+                    <Border Style="{StaticResource Notice}" IsVisible="{Binding ProfileIsManual}">
+                        <Label TextColor="{StaticResource Warning}" Text="Perfil elegido a mano: verificá que corresponda a este auto antes de probar nada." />
+                    </Border>
+                    <Button Text="Importar perfil (.json)…" Style="{StaticResource OutlineButton}" Command="{Binding ImportProfileCommand}" />
+                    <Label Style="{StaticResource Muted}" Text="Los perfiles se arman por modelo con datos verificados en ese auto (ver perfiles/README.md en el repo)." />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="12" IsVisible="{Binding HasProfile}">
+                    <Border Style="{StaticResource Notice}" IsVisible="{Binding IsSimulated}">
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="SIMULACIÓN: los actuadores son de mentira." FontAttributes="Bold" TextColor="{StaticResource Warning}" />
+                            <Label Text="{Binding EngineText}" />
+                            <HorizontalStackLayout Spacing="8">
+                                <Button Text="Apagar motor" Style="{StaticResource OutlineButton}" Command="{Binding EngineOffCommand}" />
+                                <Button Text="Arrancar" Style="{StaticResource OutlineButton}" Command="{Binding EngineIdleCommand}" />
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{Binding ProfileName}" FontAttributes="Bold" />
+                            <Label Text="{Binding ProfileSource}" Style="{StaticResource Muted}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Button Text="Entrar al modo pruebas" Style="{StaticResource PrimaryButton}" Command="{Binding EnterCommand}" IsVisible="{Binding CanEnter}" />
+
+                    <VerticalStackLayout Spacing="10" IsVisible="{Binding IsActive}">
+                        <Button Text="DETENER TODO" BackgroundColor="{StaticResource Danger}" TextColor="White" Command="{Binding StopAllCommand}" />
+                        <Button Text="Salir del modo pruebas" Style="{StaticResource OutlineButton}" Command="{Binding ExitCommand}" />
+                        <Border Style="{StaticResource Card}" IsVisible="{Binding HasActive}" BackgroundColor="{AppThemeBinding Light={StaticResource WarningSoftLight}, Dark={StaticResource WarningSoftDark}}">
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="{Binding ActiveText}" FontAttributes="Bold" />
+                                <Label Text="{Binding FeedbackText}" />
+                            </VerticalStackLayout>
+                        </Border>
+                        <Label Style="{StaticResource Muted}"
+                               Text="Mientras dura el modo pruebas no se leen sensores ni fallas. Cada prueba se apaga sola al vencer su tiempo, al cambiar de prueba, al salir o al desconectar." />
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </CollectionView.Header>
+
+        <CollectionView.ItemTemplate>
+            <DataTemplate x:DataType="vm:ActuatorTestItem">
+                <Border Style="{StaticResource Card}">
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border" Binding="{Binding IsActive}" Value="True">
+                            <Setter Property="Stroke" Value="{StaticResource Accent}" />
+                            <Setter Property="StrokeThickness" Value="3" />
+                        </DataTrigger>
+                    </Border.Triggers>
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="{Binding Name}" FontSize="19" FontAttributes="Bold" />
+                        <Label Text="{Binding Description}" />
+                        <Label Text="{Binding Precondition}" Style="{StaticResource Muted}" />
+                        <FlexLayout Wrap="Wrap" BindableLayout.ItemsSource="{Binding Steps}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="vm:StepItem">
+                                    <Button Text="{Binding Name}" Command="{Binding Command}" Margin="0,4,8,4" Padding="14,8">
+                                        <Button.Triggers>
+                                            <DataTrigger TargetType="Button" Binding="{Binding IsStop}" Value="True">
+                                                <Setter Property="BackgroundColor" Value="{StaticResource Danger}" />
+                                            </DataTrigger>
+                                        </Button.Triggers>
+                                    </Button>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </FlexLayout>
+                        <Label Text="{Binding Status}" IsVisible="{Binding HasStatus}" />
+                    </VerticalStackLayout>
+                </Border>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+
+        <CollectionView.Footer>
+            <VerticalStackLayout Spacing="8" Padding="0,12,0,24" IsVisible="{Binding IsActive}">
+                <Label Text="Registro" Style="{StaticResource Section}" />
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Log}" Spacing="2">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <Label Text="{Binding .}" Style="{StaticResource Mono}" />
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </CollectionView.Footer>
+    </CollectionView>
+</ContentPage>

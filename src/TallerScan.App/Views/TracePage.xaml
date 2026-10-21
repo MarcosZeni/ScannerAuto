@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="TallerScan.App.Views.TracePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:TallerScan.App.ViewModels"
+    x:DataType="vm:TraceViewModel"
+    Title="Técnico">
+
+    <CollectionView ItemsSource="{Binding Lines}" SelectionMode="None" Margin="16,0">
+        <CollectionView.Header>
+            <VerticalStackLayout Spacing="10" Padding="0,16,0,12">
+                <Label Style="{StaticResource Muted}"
+                       Text="Todo lo que se manda al adaptador y lo que responde, lo más nuevo arriba. Los comandos bloqueados (borrar fallas, órdenes al auto) no salen del equipo." />
+                <HorizontalStackLayout Spacing="8">
+                    <Button Text="Compartir traza" Style="{StaticResource OutlineButton}" Command="{Binding ShareCommand}" />
+                    <Button Text="Limpiar" Style="{StaticResource OutlineButton}" Command="{Binding ClearCommand}" />
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </CollectionView.Header>
+
+        <CollectionView.ItemTemplate>
+            <DataTemplate x:DataType="vm:TraceLine">
+                <VerticalStackLayout Padding="0,6" Spacing="2">
+                    <HorizontalStackLayout Spacing="10">
+                        <Label Text="{Binding Time}" Style="{StaticResource Mono}" Opacity="0.6" />
+                        <Label Text="{Binding Command}" Style="{StaticResource Mono}" FontAttributes="Bold" />
+                        <Label Text="{Binding Status}" Style="{StaticResource Mono}" TextColor="{Binding StatusColor}" />
+                    </HorizontalStackLayout>
+                    <Label Text="{Binding Response}" Style="{StaticResource Mono}" LineBreakMode="CharacterWrap" />
+                </VerticalStackLayout>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+
+        <CollectionView.EmptyView>
+            <Label Text="Sin tráfico todavía." Style="{StaticResource Muted}" Margin="0,16" />
+        </CollectionView.EmptyView>
+    </CollectionView>
+</ContentPage>

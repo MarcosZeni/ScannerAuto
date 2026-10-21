@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/TallerScan.App/TallerScan.App.csproj" />
+    <Project Path="src/TallerScan.Core/TallerScan.Core.csproj" />
+    <Project Path="src/TallerScan.Infrastructure/TallerScan.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/TallerScan.Tests/TallerScan.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/TallerScan.Emulator/TallerScan.Emulator.csproj" />
+  </Folder>
+</Solution>

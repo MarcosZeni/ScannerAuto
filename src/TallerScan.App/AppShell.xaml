@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="TallerScan.App.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:TallerScan.App.Views"
+    Title="TallerScan"
+    Shell.FlyoutBehavior="Disabled">
+
+    <TabBar>
+        <ShellContent Title="Conexión" Icon="tab_conexion.png" Route="conexion" ContentTemplate="{DataTemplate views:ConnectionPage}" />
+        <ShellContent Title="Fallas" Icon="tab_fallas.png" Route="fallas" ContentTemplate="{DataTemplate views:FaultsPage}" />
+        <ShellContent Title="Sensores" Icon="tab_sensores.png" Route="sensores" ContentTemplate="{DataTemplate views:LivePage}" />
+        <ShellContent Title="Pruebas" Icon="tab_pruebas.png" Route="pruebas" ContentTemplate="{DataTemplate views:ActuatorsPage}" />
+        <ShellContent Title="Historial" Icon="tab_historial.png" Route="historial" ContentTemplate="{DataTemplate views:HistoryPage}" />
+    </TabBar>
+
+</Shell>

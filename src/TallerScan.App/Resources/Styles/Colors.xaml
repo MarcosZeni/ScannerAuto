@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Colores de la marca (los mismos de la web): azul #1F4E79, amarillo #F2C230,
+     fondo oscuro de taller #11171D. Cada color tiene versión clara y oscura. -->
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <Color x:Key="BackgroundLight">#F6F7F5</Color>
+    <Color x:Key="BackgroundDark">#11171D</Color>
+    <Color x:Key="SurfaceLight">#FFFFFF</Color>
+    <Color x:Key="SurfaceDark">#1A232C</Color>
+    <Color x:Key="TextLight">#17202A</Color>
+    <Color x:Key="TextDark">#E8EDF1</Color>
+    <Color x:Key="MutedLight">#56616B</Color>
+    <Color x:Key="MutedDark">#9AA7B2</Color>
+    <Color x:Key="BorderLight">#D3D9DE</Color>
+    <Color x:Key="BorderDark">#2C3843</Color>
+
+    <Color x:Key="Primary">#1F4E79</Color>
+    <Color x:Key="PrimaryDarkTheme">#2B6CA8</Color>
+    <Color x:Key="PrimarySoftLight">#E3ECF5</Color>
+    <Color x:Key="PrimarySoftDark">#1C3550</Color>
+    <Color x:Key="Accent">#F2C230</Color>
+    <Color x:Key="OnAccent">#17202A</Color>
+
+    <Color x:Key="Success">#1E7A46</Color>
+    <Color x:Key="SuccessSoftLight">#E4F3EA</Color>
+    <Color x:Key="SuccessSoftDark">#143A25</Color>
+    <Color x:Key="Warning">#8A5A00</Color>
+    <Color x:Key="WarningSoftLight">#FDF1D6</Color>
+    <Color x:Key="WarningSoftDark">#3D2E0A</Color>
+    <Color x:Key="Danger">#B42318</Color>
+    <Color x:Key="DangerSoftLight">#FBE7E5</Color>
+    <Color x:Key="DangerSoftDark">#45160F</Color>
+
+    <Color x:Key="White">#FFFFFF</Color>
+    <Color x:Key="Black">#000000</Color>
+
+</ResourceDictionary>

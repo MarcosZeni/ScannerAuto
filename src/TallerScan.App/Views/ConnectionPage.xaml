@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="TallerScan.App.Views.ConnectionPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:TallerScan.App.ViewModels"
+    x:DataType="vm:ConnectionViewModel"
+    Title="Conexión">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="12" MaximumWidthRequest="760">
+
+            <!-- Estado: transporte, adaptador y auto son tres cosas distintas. -->
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="8">
+                    <HorizontalStackLayout Spacing="10">
+                        <BoxView Color="{Binding StateColor}" WidthRequest="14" HeightRequest="14" CornerRadius="7" VerticalOptions="Center" />
+                        <Label Text="{Binding StateText}" FontSize="18" FontAttributes="Bold" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+                    <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Start" />
+                    <Label Text="{Binding Message}" IsVisible="{Binding HasMessage}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource Notice}" IsVisible="{Binding IsSimulatedSession}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="SIMULACIÓN: los datos no son de un auto real." FontAttributes="Bold" TextColor="{StaticResource Warning}" />
+                    <Label Text="{Binding EngineText}" />
+                    <FlexLayout Wrap="Wrap">
+                        <Button Text="Apagar motor" Style="{StaticResource OutlineButton}" Command="{Binding EngineOffCommand}" Margin="0,0,8,8" />
+                        <Button Text="Ralentí" Style="{StaticResource OutlineButton}" Command="{Binding EngineIdleCommand}" Margin="0,0,8,8" />
+                        <Button Text="Andando" Style="{StaticResource OutlineButton}" Command="{Binding EngineDriveCommand}" Margin="0,0,8,8" />
+                    </FlexLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <Label Text="Vehículo" Style="{StaticResource Section}" />
+            <Entry Placeholder="Patente (ej. AB 123 CD)" Text="{Binding Plate}" TextTransform="Uppercase" MaxLength="10" />
+            <Entry Placeholder="Marca, modelo y motor" Text="{Binding Vehicle}" MaxLength="80" />
+
+            <Label Text="Adaptador" Style="{StaticResource Section}" />
+            <Picker Title="Tipo de conexión" ItemsSource="{Binding Transports}" SelectedItem="{Binding SelectedTransport}" IsEnabled="{Binding IsConnected, Converter={StaticResource Not}}" />
+            <Label Text="{Binding TransportHint}" Style="{StaticResource Muted}" />
+
+            <VerticalStackLayout Spacing="8" IsVisible="{Binding IsSimulation}">
+                <Picker Title="Auto simulado" ItemsSource="{Binding Scenarios}" SelectedItem="{Binding SelectedScenario}" IsEnabled="{Binding IsConnected, Converter={StaticResource Not}}" />
+                <Label Text="{Binding SelectedScenario.Description}" Style="{StaticResource Muted}" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="8" IsVisible="{Binding IsBluetooth}">
+                <Button Text="Buscar adaptadores vinculados" Style="{StaticResource OutlineButton}" Command="{Binding FindAdaptersCommand}" />
+                <Picker Title="Adaptador" ItemsSource="{Binding Adapters}" SelectedItem="{Binding SelectedAdapter}" IsEnabled="{Binding IsConnected, Converter={StaticResource Not}}" />
+                <Label Text="{Binding AdapterProblem}" IsVisible="{Binding HasAdapterProblem}" TextColor="{StaticResource Danger}" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="8" IsVisible="{Binding IsWifi}">
+                <Label Text="Dirección IP del adaptador" Style="{StaticResource Muted}" />
+                <Entry Text="{Binding WifiHost}" Keyboard="Url" />
+                <Label Text="Puerto" Style="{StaticResource Muted}" />
+                <Entry Text="{Binding WifiPort}" Keyboard="Numeric" MaxLength="5" />
+            </VerticalStackLayout>
+
+            <Button Text="Conectar" Style="{StaticResource PrimaryButton}" Command="{Binding ConnectCommand}" IsVisible="{Binding IsConnected, Converter={StaticResource Not}}" Margin="0,8,0,0" />
+            <Button Text="Reintentar (dar contacto primero)" Command="{Binding RetryCommand}" IsVisible="{Binding CanRetry}" />
+            <Button Text="Desconectar" Style="{StaticResource OutlineButton}" Command="{Binding DisconnectCommand}" IsVisible="{Binding IsConnected}" />
+
+            <Border Style="{StaticResource Card}" IsVisible="{Binding HasResult}">
+                <VerticalStackLayout Spacing="10">
+                    <VerticalStackLayout>
+                        <Label Text="Interfaz" Style="{StaticResource Muted}" />
+                        <Label Text="{Binding AdapterText}" />
+                        <Label Text="{Binding TransportText}" Style="{StaticResource Muted}" />
+                    </VerticalStackLayout>
+                    <VerticalStackLayout>
+                        <Label Text="Protocolo" Style="{StaticResource Muted}" />
+                        <Label Text="{Binding ProtocolText}" />
+                    </VerticalStackLayout>
+                    <VerticalStackLayout>
+                        <Label Text="Tensión en la ficha" Style="{StaticResource Muted}" />
+                        <Label Text="{Binding VoltageText}" />
+                    </VerticalStackLayout>
+                    <VerticalStackLayout>
+                        <Label Text="VIN leído del auto" Style="{StaticResource Muted}" />
+                        <Label Text="{Binding VinText}" FontFamily="{OnPlatform Android=monospace, WinUI=Consolas}" />
+                    </VerticalStackLayout>
+                    <VerticalStackLayout>
+                        <Label Text="Módulos que respondieron" Style="{StaticResource Muted}" />
+                        <Label Text="{Binding ModulesText}" />
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <Button Text="Traza técnica (lo que se habló con el adaptador)" Style="{StaticResource OutlineButton}" Command="{Binding TraceCommand}" Margin="0,8,0,0" />
+
+            <Label Style="{StaticResource Muted}" Margin="0,12,0,0"
+                   Text="Al adaptador solo salen consultas de lectura, salvo cuando vos confirmás un borrado de fallas o una prueba de actuadores. Un código orienta el diagnóstico; no indica por sí solo qué pieza cambiar." />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

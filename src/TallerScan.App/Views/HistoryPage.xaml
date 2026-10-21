@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="TallerScan.App.Views.HistoryPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:TallerScan.App.ViewModels"
+    x:DataType="vm:HistoryViewModel"
+    Title="Historial">
+
+    <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+        <CollectionView x:Name="List" ItemsSource="{Binding Items}" SelectionMode="Single" SelectionChanged="OnSelectionChanged" Margin="16,0">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
+            </CollectionView.ItemsLayout>
+
+            <CollectionView.Header>
+                <VerticalStackLayout Spacing="10" Padding="0,16,0,12">
+                    <Label Style="{StaticResource Muted}"
+                           Text="Diagnósticos guardados en este equipo. Para pasarlos a otro (celular ↔ PC), abrí uno, tocá Exportar y después Importar en el otro." />
+                    <Button Text="Importar diagnóstico" Style="{StaticResource OutlineButton}" Command="{Binding ImportCommand}" />
+                </VerticalStackLayout>
+            </CollectionView.Header>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="vm:HistoryItem">
+                    <Border Style="{StaticResource Card}">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{Binding Title}" FontSize="19" FontAttributes="Bold" />
+                            <Label Text="{Binding Subtitle}" Style="{StaticResource Muted}" />
+                            <Border Style="{StaticResource Chip}" BackgroundColor="{Binding BadgeColor}" Margin="0,4,0,0">
+                                <Label Text="{Binding Badge}" TextColor="White" FontSize="13" FontAttributes="Bold" />
+                            </Border>
+                        </VerticalStackLayout>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+            <CollectionView.EmptyView>
+                <Label Text="{Binding EmptyText}" Style="{StaticResource Muted}" Margin="0,16" />
+            </CollectionView.EmptyView>
+        </CollectionView>
+    </RefreshView>
+</ContentPage>

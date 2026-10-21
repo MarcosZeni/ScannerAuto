@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="TallerScan.App.Views.HistoryDetailPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:TallerScan.App.ViewModels"
+    x:DataType="vm:HistoryDetailViewModel"
+    Title="{Binding Title}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Compartir" Command="{Binding ShareReportCommand}" Order="Primary" />
+        <ToolbarItem Text="Exportar" Command="{Binding ExportCommand}" Order="Secondary" />
+        <ToolbarItem Text="Eliminar" Command="{Binding DeleteCommand}" Order="Secondary" />
+    </ContentPage.ToolbarItems>
+
+    <!-- El mismo informe HTML que se comparte con el cliente. -->
+    <WebView Source="{Binding Html}" />
+</ContentPage>

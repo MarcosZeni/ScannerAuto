@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="TallerScan.App.Views.FaultsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:TallerScan.App.ViewModels"
+    x:DataType="vm:FaultsViewModel"
+    Title="Fallas">
+
+    <!-- La lista es el contenido principal; los controles van en Header/Footer para
+         compartir el mismo desplazamiento (no se anida en un ScrollView). -->
+    <CollectionView ItemsSource="{Binding Items}" SelectionMode="None" Margin="16,0">
+        <CollectionView.ItemsLayout>
+            <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
+        </CollectionView.ItemsLayout>
+
+        <CollectionView.Header>
+            <VerticalStackLayout Spacing="12" Padding="0,16,0,12">
+                <Border Style="{StaticResource Notice}" IsVisible="{Binding IsSimulated}">
+                    <Label Text="SIMULACIÓN: los códigos no son de un auto real." FontAttributes="Bold" TextColor="{StaticResource Warning}" />
+                </Border>
+                <Button Text="Leer fallas" Style="{StaticResource PrimaryButton}" Command="{Binding ReadCommand}" />
+                <Label Text="Conectá un auto en la pestaña Conexión." Style="{StaticResource Muted}" IsVisible="{Binding IsReady, Converter={StaticResource Not}}" />
+                <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Start" />
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="{Binding MilText}" TextColor="{Binding MilColor}" FontSize="20" FontAttributes="Bold" />
+                        <Label Text="{Binding Summary}" />
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+        </CollectionView.Header>
+
+        <CollectionView.ItemTemplate>
+            <DataTemplate x:DataType="vm:FaultItem">
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="6">
+                        <HorizontalStackLayout Spacing="10">
+                            <Label Text="{Binding Title}" FontSize="22" FontAttributes="Bold" FontFamily="{OnPlatform Android=monospace, WinUI=Consolas}" VerticalOptions="Center" />
+                            <Border Style="{StaticResource Chip}" BackgroundColor="{Binding BadgeColor}">
+                                <Label Text="{Binding Badge}" TextColor="White" FontSize="13" FontAttributes="Bold" />
+                            </Border>
+                        </HorizontalStackLayout>
+                        <Label Text="{Binding Body}" />
+                        <Label Text="{Binding Footer}" Style="{StaticResource Muted}" />
+                    </VerticalStackLayout>
+                </Border>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+
+        <CollectionView.Footer>
+          <VerticalStackLayout Spacing="0">
+            <VerticalStackLayout Spacing="12" Padding="0,12,0,12" IsVisible="{Binding HasScan}">
+                <Border Style="{StaticResource Card}" IsVisible="{Binding HasMonitors}">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Monitores de emisiones" Style="{StaticResource Section}" Margin="0" />
+                        <Label Text="{Binding Monitors}" />
+                        <Label Text="No equivale a una aprobación de VTV." Style="{StaticResource Muted}" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Style="{StaticResource Card}" IsVisible="{Binding HasFreezeFrame}">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Datos congelados (freeze frame)" Style="{StaticResource Section}" Margin="0" />
+                        <Label Text="{Binding FreezeFrame}" />
+                        <Label Text="Condiciones del momento en que se registró la falla, no valores actuales." Style="{StaticResource Muted}" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Label Text="Observaciones del mecánico" Style="{StaticResource Section}" />
+                <Editor Text="{Binding Notes}" Placeholder="Qué se probó, qué se encontró, qué se reparó…" AutoSize="TextChanges" MinimumHeightRequest="100" />
+                <Button Text="Guardar en el historial" Command="{Binding SaveCommand}" />
+                <Button Text="Compartir informe" Style="{StaticResource OutlineButton}" Command="{Binding ShareCommand}" />
+
+                <Label Text="Borrar fallas" Style="{StaticResource Section}" Margin="0,16,0,0" />
+                <Label Style="{StaticResource Muted}"
+                       Text="Después de reparar. Con el motor apagado y el contacto dado. Se guarda el diagnóstico como evidencia antes de borrar y se vuelve a leer después." />
+                <Button Text="Borrar fallas de motor…" Style="{StaticResource OutlineButton}" TextColor="{StaticResource Danger}" BorderColor="{StaticResource Danger}" Command="{Binding ClearCommand}" />
+                <VerticalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding ModuleClears}" IsVisible="{Binding HasModuleClears}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="vm:ModuleClearItem">
+                            <Button Text="{Binding Label}" Style="{StaticResource OutlineButton}" TextColor="{StaticResource Danger}" BorderColor="{StaticResource Danger}" Command="{Binding Command}" />
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+                <Label Text="{Binding LastClearText}" IsVisible="{Binding HasLastClear}" Style="{StaticResource Muted}" />
+            </VerticalStackLayout>
+
+            <!-- Barrido de módulos sin perfil: lo que hace un escáner "todos los sistemas" para ABS, airbag, caja... -->
+            <VerticalStackLayout Spacing="12" Padding="0,12,0,24" IsVisible="{Binding IsReady}">
+                <Label Text="Todos los módulos (ABS, airbag, caja, carrocería)" Style="{StaticResource Section}" />
+                <Label Style="{StaticResource Muted}"
+                       Text="Pregunta por sus fallas a cada dirección CAN posible y muestra los módulos que contestan, con sus códigos y su estado. Tarda uno o dos minutos. Los nombres de los módulos y las descripciones de los códigos propios de la marca no están disponibles: se muestran la dirección y el código." />
+                <Label Text="Este auto habla por K-Line: el barrido de módulos solo funciona por CAN." Style="{StaticResource Muted}" IsVisible="{Binding CanScanModules, Converter={StaticResource Not}}" />
+                <Button Text="Buscar todos los módulos" Style="{StaticResource PrimaryButton}" Command="{Binding ScanModulesCommand}" IsVisible="{Binding IsScanningModules, Converter={StaticResource Not}}" />
+                <VerticalStackLayout Spacing="8" IsVisible="{Binding IsScanningModules}">
+                    <ActivityIndicator IsRunning="{Binding IsScanningModules}" HorizontalOptions="Start" />
+                    <Label Text="{Binding ScanProgress}" />
+                    <Button Text="Cancelar el barrido" Style="{StaticResource OutlineButton}" Command="{Binding CancelScanCommand}" />
+                </VerticalStackLayout>
+                <Label Text="{Binding ModulesSummary}" IsVisible="{Binding HasModulesSummary}" />
+                <VerticalStackLayout Spacing="10" BindableLayout.ItemsSource="{Binding Modules}" IsVisible="{Binding HasModules}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="vm:ModuleItem">
+                            <Border Style="{StaticResource Card}">
+                                <VerticalStackLayout Spacing="6">
+                                    <Label Text="{Binding Title}" FontSize="19" FontAttributes="Bold" />
+                                    <Label Text="{Binding Subtitle}" Style="{StaticResource Muted}" />
+                                    <Label Text="{Binding Status}" TextColor="{Binding StatusColor}" FontAttributes="Bold" />
+                                    <Label Text="{Binding Codes}" Style="{StaticResource Mono}" IsVisible="{Binding HasDtcs}" />
+                                    <Button Text="Borrar fallas de este módulo…" Style="{StaticResource OutlineButton}" TextColor="{StaticResource Danger}" BorderColor="{StaticResource Danger}" Command="{Binding ClearCommand}" IsVisible="{Binding HasDtcs}" />
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+                <Button Text="Borrar las fallas de todos los módulos…" BackgroundColor="{StaticResource Danger}" TextColor="White" Command="{Binding ClearAllModulesCommand}" IsVisible="{Binding HasModuleDtcs}" />
+            </VerticalStackLayout>
+          </VerticalStackLayout>
+        </CollectionView.Footer>
+    </CollectionView>
+</ContentPage>
